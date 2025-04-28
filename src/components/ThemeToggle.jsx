@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DarkAndLight from "./DarkAndLight";
 import { IoMdSearch } from "react-icons/io";
 import myImage from "../asset/avatar.png";
@@ -7,16 +7,55 @@ import { IoIosLink } from "react-icons/io";
 import { FiTwitter } from "react-icons/fi";
 import { BsBuildingsFill } from "react-icons/bs";
 function ThemeToggle() {
+  const [userName, SetUserName] =useState(""); //to sote username input
+  const [userData,SetUserData] = useState(null); //to fetch user data 
+  const [error, setError] = useState ("");
+
+  // function to handle the github API fetch
+const handleSearch = async (e) =>{
+  
+e.preventDefault(); // prevent form form reloading the page
+setError(""); //clear previous error
+SetUserData(null); //clear prvious  user data
+
+
+//fetch data from github API
+  try{
+  const response = await fetch(`https://api.github.com/users/${userName}`);
+
+if(!response.ok){
+  throw new Error ("User not found");
+}
+const data = await response.json();
+SetUserData(data); // fetch data into state
+
+  } 
+  catch(err){
+    setError("user not Found") // show error messagage
+  }
+};
+
+React.useEffect(() => {
+  if (userName) {
+    handleSearch(new Event('submit'));
+  }
+
+}, 
+[userName]);
+
+if (error) {
+  return <p className="text-red-600">{error}</p>;
+}
   return (
-    <div className="bg-slate-400 p-1.5 pt-10 rounded-xl w-full">
-      <div className="border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded p-2">
+    <div className=" p-1.5 pt-10 rounded-xl w-full">
+      <div className=" bg-slate-950 text-white  border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded-2xl p-2">
         <section className="flex justify-between gap-4">
           <p className="text-xl font-semibold">GitHub</p>
           <DarkAndLight />
         </section>
 
         {/* Search Form */}
-        <form className="flex items-center gap-3 w-full max-w-[700px] p-4">
+        <form className="flex items-center gap-3 w-full max-w-[700px] p-4" onSubmit={handleSearch}>
           <section className="flex items-center w-full border border-gray-300 rounded-xl py-4">
             {/* Search Icon with spacing */}
             <IoMdSearch className="text-xl ml-3" />
@@ -26,6 +65,8 @@ function ThemeToggle() {
               className="border-none w-full py-2 pl-4 pr-10 text-gray-700 focus:outline-none"
               type="text"
               placeholder="Search GitHub username"
+              value={userName}
+              onChange={(e) => SetUserName(e.target.value)} // Update username state as you type
             />
           </section>
 
@@ -34,63 +75,83 @@ function ThemeToggle() {
             Search
           </button>
         </form>
+        {error && <p className="text-red-700">{error}</p>}
 
         {/* Image section */}
-        <section className="flex items-center mt-6 gap-x-6">
-          <div>
-            <img
-              src={myImage}
-              alt="Description of the image"
-              className="w-24 h-24 rounded-full"
-            />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold">The Octactal</h1>
+{/* Image section */}
+{userData && (
+  <section className="flex items-center mt-6 gap-x-6">
+    <div>
+      <img
+        src={myImage}
+        alt="User profile picture"
+        className="w-24 h-24 rounded-full"
+      />
+    </div>
+    <div>
+      <h1 className="text-xl font-bold">{userData.name || "No name"}</h1>
 
-            <a href="#" className="text-blue-600 hover:underline">
-              @Octactal
-            </a>
-            <p className="text-gray-600">Joined Date: 25 Jan 2025</p>
-          </div>
-        </section>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic maiores
-          maxime itaque vitae, magnam temporibus veniam, repellendus, porro
-          nobis nostrum accusantium nesciunt quos facilis quod officiis iusto ex
-          sapiente aut?
-        </p>
-        <div className="bg-slate-600 rounded-lg flex justify-between px-6 py-4">
+      {/* Providing a valid URL for the href */}
+      <a href={userData?.html_url || "#"} className="text-blue-600 hover:underline">
+        @{userData?.login}
+      </a>
+
+      <p className="text-gray-600">
+        Joined Date: {new Date(userData.created_at).toLocaleDateString()}
+      </p>
+    </div>
+  </section>
+)}
+      <p> {userData ? userData.bio : 
+          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic maiores maxime itaque vitae, magnam temporibus veniam, repellendus, porro nobis nostrum sapiente aut?"
+      }</p>
+        {userData && ( <div className="bg-slate-600 rounded-lg flex justify-between px-6 py-4">
           <div>
-            <p>Repo</p>
-            <p className="font-bold">9</p>
+            <p>Repos</p>
+            <p className="font-bold">{userData.repos}</p>
           </div>
           <div>
             <p>Folowers</p>
-            <p className="font-bold">3099</p>
+            <p className="font-bold">{userData.followers}</p>
           </div>
           <div>
             <p>Following</p>
-            <p className="font-bold">8</p>
+            <p className="font-bold">{userData.following}</p>
           </div>
         </div>
+      )}
+       {userData && (
         <div className="grid grid-cols-2 gap-4 py-3 px-4">
-          <div className="flex items-center">
-          <IoLocationOutline />
-            <p className="ml-2">San francisco</p>
+          {userData.location && (
+             <div className="flex items-center">
+             <IoLocationOutline />
+               <p className="ml-2">San francisco</p>
+             </div>
+          )}
+          {userData.blog &&(
+            <div className="flex items-center">
+            <IoIosLink />
+            <a href={userData.blog} className="ml-2 text-blue-600 hover:underline">
+                    {userData.blog}
+                  </a>
+            </div>
+          )}
+          {userData.twitter_userName && (
+            <div className="flex items-center">
+            <FiTwitter />
+            <a href={`https://twitter.com/${userData.twitter_username}`} className="ml-2 text-blue-600 hover:underline">
+                  @{userData.twitter_username}
+                </a>
+            </div>
+          )}
+          {userData.company && (
+            <div className="flex items-center">
+            <BsBuildingsFill />
+            <p className="ml-2">{userData.company}</p>
+            </div>
+          )}
           </div>
-          <div className="flex items-center">
-          <IoIosLink />
-            <p className="ml-2">San francisco</p>
-          </div>
-          <div className="flex items-center">
-          <FiTwitter />
-            <p className="ml-2">San francisco</p>
-          </div>
-          <div className="flex items-center">
-          <BsBuildingsFill />
-            <p className="ml-2">San francisco</p>
-          </div>
-        </div>
+       )}  
       </div>
     </div>
   );
