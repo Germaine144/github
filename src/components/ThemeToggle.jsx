@@ -7,19 +7,15 @@ import { IoIosLink } from "react-icons/io";
 import { FiTwitter } from "react-icons/fi";
 import { BsBuildingsFill } from "react-icons/bs";
 function ThemeToggle() {
-  const [userName, SetUserName] =useState(""); //to sote username input
-  const [userData,SetUserData] = useState(null); //to fetch user data 
+  const [userName, SetUserName] =useState(""); 
+  const [userData,SetUserData] = useState(null); 
   const [error, setError] = useState ("");
 
-  // function to handle the github API fetch
 const handleSearch = async (e) =>{
   
-e.preventDefault(); // prevent form form reloading the page
-setError(""); //clear previous error
-SetUserData(null); //clear prvious  user data
-
-
-//fetch data from github API
+e.preventDefault();
+setError(""); 
+SetUserData(null); 
   try{
   const response = await fetch(`https://api.github.com/users/${userName}`);
 
@@ -27,11 +23,11 @@ if(!response.ok){
   throw new Error ("User not found");
 }
 const data = await response.json();
-SetUserData(data); // fetch data into state
+SetUserData(data); 
 
   } 
   catch(err){
-    setError("user not Found") // show error messagage
+    setError("user not Found") 
   }
 };
 
@@ -76,7 +72,7 @@ if (error) {
           </button>
         </form>
         {error && <p className="text-red-700">{error}</p>}
-
+~
         {/* Image section */}
 {/* Image section */}
 {userData && (
@@ -89,7 +85,8 @@ if (error) {
       />
     </div>
     <div>
-      <h1 className="text-xl font-bold">{userData.name || "No name"}</h1>
+    <p>{userData ? userData.bio || "No bio found" : "Search for a user to see their bio"}</p>
+
 
       {/* Providing a valid URL for the href */}
       <a href={userData?.html_url || "#"} className="text-blue-600 hover:underline">
@@ -103,7 +100,7 @@ if (error) {
   </section>
 )}
       <p> {userData ? userData.bio : 
-          "Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic maiores maxime itaque vitae, magnam temporibus veniam, repellendus, porro nobis nostrum sapiente aut?"
+          "No Boi Found"
       }</p>
         {userData && ( <div className="bg-slate-600 rounded-lg flex justify-between px-6 py-4">
           <div>
