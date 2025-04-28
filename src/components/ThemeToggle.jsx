@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import DarkAndLight from "./DarkAndLight";
 import { IoMdSearch } from "react-icons/io";
 import myImage from "../asset/avatar.png";
@@ -27,11 +27,11 @@ SetUserData(data);
 
   } 
   catch(err){
-    setError("user not Found") 
+    setError("No Records Found") 
   }
 };
 
-React.useEffect(() => {
+useEffect(() => {
   if (userName) {
     handleSearch(new Event('submit'));
   }
@@ -39,9 +39,8 @@ React.useEffect(() => {
 }, 
 [userName]);
 
-if (error) {
-  return <p className="text-red-600">{error}</p>;
-}
+
+
   return (
     <div className=" p-1.5 pt-10 rounded-xl w-full">
       <div className=" bg-slate-950 text-white  border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded-2xl p-2">
@@ -51,30 +50,29 @@ if (error) {
         </section>
 
         {/* Search Form */}
-        <form className="flex items-center gap-3 w-full max-w-[700px] p-4" onSubmit={handleSearch}>
-          <section className="flex items-center w-full border border-gray-300 rounded-xl py-4">
-            {/* Search Icon with spacing */}
-            <IoMdSearch className="text-xl ml-3" />
+        {/* Search Form */}
+<form className="flex items-center gap-3 w-full max-w-[700px] p-4" onSubmit={handleSearch}>
+  <section className="flex items-center w-full border border-gray-300 rounded-xl py-4">
+    <IoMdSearch className="text-xl ml-3" />
+    <input
+      className="border-none w-full py-2 pl-4 pr-10 text-gray-700 focus:outline-none"
+      type="text"
+      placeholder="Search GitHub username"
+      value={userName}
+      onChange={(e) => SetUserName(e.target.value)}
+    />
+  </section>
+  <button className="bg-blue-700 text-white py-2 px-7 rounded-xl hover:bg-blue-800 focus:outline-none">
+    Search
+  </button>
+</form>
 
-            {/* Input with more left padding */}
-            <input
-              className="border-none w-full py-2 pl-4 pr-10 text-gray-700 focus:outline-none"
-              type="text"
-              placeholder="Search GitHub username"
-              value={userName}
-              onChange={(e) => SetUserName(e.target.value)} // Update username state as you type
-            />
-          </section>
+{error && (
+  <p className="text-red-600 text-center mb-4">{error}</p>
+)}
 
-          {/* Search Button */}
-          <button className="bg-blue-700 text-white py-2 px-7 rounded-xl hover:bg-blue-800 focus:outline-none">
-            Search
-          </button>
-        </form>
-        {error && <p className="text-red-700">{error}</p>}
 ~
         {/* Image section */}
-{/* Image section */}
 {userData && (
   <section className="flex items-center mt-6 gap-x-6">
     <div>
@@ -85,17 +83,17 @@ if (error) {
       />
     </div>
     <div>
-    <p>{userData ? userData.bio || "No bio found" : "Search for a user to see their bio"}</p>
+    <p>{userData.bio || "No bio found"}</p>
 
 
       {/* Providing a valid URL for the href */}
       <a href={userData?.html_url || "#"} className="text-blue-600 hover:underline">
-        @{userData?.login}
-      </a>
+                @{userData?.login}
+              </a>
 
-      <p className="text-gray-600">
+       <p className="text-gray-600">
         Joined Date: {new Date(userData.created_at).toLocaleDateString()}
-      </p>
+              </p>
     </div>
   </section>
 )}
