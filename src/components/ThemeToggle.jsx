@@ -43,18 +43,18 @@ catch (err) {
 }}
 
   return (
-    <div className="p-1.5 pt-10 rounded-xl w-full transition-colors duration-300">
-      <div className="bg-white text-black dark:bg-slate-950 dark:text-white border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded-2xl p-4 font-bold">
+    <div className="p-1.5 pt-10 rounded-xl w-full transition-colors duration-300  ">
+      <div className="bg-white text-black dark:bg-slate-950 dark:text-white border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded-2xl p-4 font-bold border border-black ">
         <section className="flex justify-between gap-4">
           <p className="text-xl font-semibold">GitHub</p>
           <DarkAndLight darkMode={darkMode} toggleDark={toggleDark} />
         </section>
 
         {/* Search Form */}
-<form className="flex items-center gap-3 w-full max-w-[700px] p-4" onSubmit={handleSearch}>
+<form className="flex items-center gap-3 w-full max-w-[700px] p-4 rounded-xl shadow-lg" onSubmit={handleSearch}>
   <section className="flex items-center w-full border border-gray-300 rounded-xl py-4">
     <IoMdSearch className="text-xl ml-3" />
-    <input className="border-none w-full py-2 pl-4 pr-10 text-gray-700 focus:outline-none" type="text"placeholder="Search GitHub username"value={userName}
+    <input className="border-none w-full py-2 pl-4 pr-10 text-gray-700 dark:text-white dark:bg-slate-800 focus:outline-none rounded-xl m-3  shadow-lg border border-black "value={userName}
       onChange={(e) => SetUserName(e.target.value)} />
   </section>
   <button className="bg-blue-700 text-white py-2 px-7 rounded-xl hover:bg-blue-800 focus:outline-none">
