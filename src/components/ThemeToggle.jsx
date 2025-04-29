@@ -54,13 +54,8 @@ catch (err) {
 <form className="flex items-center gap-3 w-full max-w-[700px] p-4" onSubmit={handleSearch}>
   <section className="flex items-center w-full border border-gray-300 rounded-xl py-4">
     <IoMdSearch className="text-xl ml-3" />
-    <input
-      className="border-none w-full py-2 pl-4 pr-10 text-gray-700 focus:outline-none"
-      type="text"
-      placeholder="Search GitHub username"
-      value={userName}
-      onChange={(e) => SetUserName(e.target.value)}
-    />
+    <input className="border-none w-full py-2 pl-4 pr-10 text-gray-700 focus:outline-none" type="text"placeholder="Search GitHub username"value={userName}
+      onChange={(e) => SetUserName(e.target.value)} />
   </section>
   <button className="bg-blue-700 text-white py-2 px-7 rounded-xl hover:bg-blue-800 focus:outline-none">
     Search
@@ -75,11 +70,8 @@ catch (err) {
 {userData && (
   <section className="flex items-center mt-6 gap-x-6">
     <div>
-    <img
-  src={userData.avatar_url || myImage}
-  alt="User profile picture"
-  className="w-24 h-24 rounded-full"
-/>
+    <img src={userData.avatar_url || myImage} alt={`${userData?.name || "GitHub user"}'s avatar`} className="w-24 h-24 rounded-full"/>
+
     </div>
     <div>
     <p>{userData?.bio || "No bio found"}</p>
