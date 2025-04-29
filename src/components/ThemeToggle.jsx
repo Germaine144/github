@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState} from "react";
 import DarkAndLight from "./DarkAndLight";
 import { IoMdSearch } from "react-icons/io";
 import myImage from "../asset/avatar.png";
@@ -16,30 +16,19 @@ const handleSearch = async (e) =>{
 e.preventDefault();
 setError(""); 
 SetUserData(null); 
-  try{
+try {
   const response = await fetch(`https://api.github.com/users/${userName}`);
-
-if(!response.ok){
-  throw new Error ("User not found");
-}
-const data = await response.json();
-SetUserData(data); 
-
-  } 
-  catch(err){
-    setError("No Records Found") 
-  }
-};
-
-useEffect(() => {
-  if (userName) {
-    handleSearch(new Event('submit'));
+  
+  if (!response.ok) {
+    throw new Error("User not found");
   }
 
-}, 
-[userName]);
-
-
+  const data = await response.json();
+  SetUserData(data);
+} 
+catch (err) {
+  setError("No Records Found");
+}}
 
   return (
     <div className=" p-1.5 pt-10 rounded-xl w-full">
@@ -49,7 +38,6 @@ useEffect(() => {
           <DarkAndLight />
         </section>
 
-        {/* Search Form */}
         {/* Search Form */}
 <form className="flex items-center gap-3 w-full max-w-[700px] p-4" onSubmit={handleSearch}>
   <section className="flex items-center w-full border border-gray-300 rounded-xl py-4">
@@ -68,23 +56,23 @@ useEffect(() => {
 </form>
 
 {error && (
-  <p className="text-red-600 text-center mb-4">{error}</p>
+  <p className="text-red-600 text-center mb-4 font-bold">{error}</p>
 )}
 
-~
         {/* Image section */}
 {userData && (
   <section className="flex items-center mt-6 gap-x-6">
     <div>
-      <img
-        src={myImage}
-        alt="User profile picture"
-        className="w-24 h-24 rounded-full"
-      />
+    <img
+  src={userData.avatar_url || myImage}
+  alt="User profile picture"
+  className="w-24 h-24 rounded-full"
+/>
+
+
     </div>
     <div>
-    <p>{userData.bio || "No bio found"}</p>
-
+    <p>{userData?.bio || "No bio found"}</p>
 
       {/* Providing a valid URL for the href */}
       <a href={userData?.html_url || "#"} className="text-blue-600 hover:underline">
@@ -103,7 +91,7 @@ useEffect(() => {
         {userData && ( <div className="bg-slate-600 rounded-lg flex justify-between px-6 py-4">
           <div>
             <p>Repos</p>
-            <p className="font-bold">{userData.repos}</p>
+            <p className="font-bold">{userData.public_repos}</p>
           </div>
           <div>
             <p>Folowers</p>
@@ -120,18 +108,18 @@ useEffect(() => {
           {userData.location && (
              <div className="flex items-center">
              <IoLocationOutline />
-               <p className="ml-2">San francisco</p>
+             <p className="ml-2">{userData.location}</p>
+
              </div>
           )}
           {userData.blog &&(
             <div className="flex items-center">
             <IoIosLink />
             <a href={userData.blog} className="ml-2 text-blue-600 hover:underline">
-                    {userData.blog}
                   </a>
             </div>
           )}
-          {userData.twitter_userName && (
+          {userData.twitter_username && (
             <div className="flex items-center">
             <FiTwitter />
             <a href={`https://twitter.com/${userData.twitter_username}`} className="ml-2 text-blue-600 hover:underline">
@@ -151,5 +139,4 @@ useEffect(() => {
     </div>
   );
 }
-
 export default ThemeToggle;
