@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState,useEffect} from "react";
 import DarkAndLight from "./DarkAndLight";
 import { IoMdSearch } from "react-icons/io";
 import myImage from "../asset/avatar.png";
@@ -10,6 +10,18 @@ function ThemeToggle() {
   const [userName, SetUserName] =useState(""); 
   const [userData,SetUserData] = useState(null); 
   const [error, setError] = useState ("");
+  const [darkMode, setDarkMode] = useState(false);
+  useEffect(() => {
+    const stored = localStorage.getItem("darkMode");
+    if (stored === "true") setDarkMode(true);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+  const toggleDark = () => setDarkMode((prev) => !prev);
 
 const handleSearch = async (e) =>{
   
@@ -31,11 +43,11 @@ catch (err) {
 }}
 
   return (
-    <div className=" p-1.5 pt-10 rounded-xl w-full">
-      <div className=" bg-slate-950 text-white  border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded-2xl p-2">
+    <div className="p-1.5 pt-10 rounded-xl w-full transition-colors duration-300">
+      <div className="bg-white text-black dark:bg-slate-950 dark:text-white border mx-auto flex w-full max-w-[700px] flex-col gap-8 rounded-2xl p-4 font-bold">
         <section className="flex justify-between gap-4">
           <p className="text-xl font-semibold">GitHub</p>
-          <DarkAndLight />
+          <DarkAndLight darkMode={darkMode} toggleDark={toggleDark} />
         </section>
 
         {/* Search Form */}
@@ -56,8 +68,8 @@ catch (err) {
 </form>
 
 {error && (
-  <p className="text-red-600 text-center mb-4 font-bold">{error}</p>
-)}
+          <p className="text-red-600 dark:text-red-400 text-center mb-4 font-bold">{error}</p>
+        )}
 
         {/* Image section */}
 {userData && (
@@ -68,8 +80,6 @@ catch (err) {
   alt="User profile picture"
   className="w-24 h-24 rounded-full"
 />
-
-
     </div>
     <div>
     <p>{userData?.bio || "No bio found"}</p>
