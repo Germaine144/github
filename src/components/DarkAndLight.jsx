@@ -9,7 +9,7 @@ function DarkAndLight({ darkMode, toggleDark }) {
       <div className="flex items-center gap-2">
         <p>{darkMode ? 'Dark' : 'Light'}</p>
         {darkMode ? (
-          <MdDarkMode className="text-3xl text-yellow-300" /> ) : ( <LuSunMedium className="text-3xl" /> )}
+          <MdDarkMode className="text-3xl text-gray-700" /> ) : ( <LuSunMedium className="text-3xl" /> )}
       </div>
     </button>
   );
